@@ -8,6 +8,7 @@ var compress = function (chars) {
       //incrementing write
       chars[write] = chars[anchor];
       write++;
+      //check to see if our cluster char count is greater than 1
       if (read > anchor) {
         //make our number of consecutive digits a string and split it into an array to single out each digit
         let count = read - anchor + 1;
@@ -26,3 +27,5 @@ var compress = function (chars) {
 };
 
 //["a","a","b","b","c","c","c"]
+
+//["a","a","a","b","b","a","a"]
