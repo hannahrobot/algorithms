@@ -4,7 +4,7 @@
 
 //Divide and conquer:
 
-//Backtracking alggorithm:
+//Backtracking algorithm:
 //find all possible routes that go from first node to end node
 
 //Dynamic Programming algorithm
@@ -15,6 +15,7 @@
 // --memoization
 //  bottom up
 // --memoization
-
+///////////////////////////////
 //linked lists
 //doubly linked lists
+//hashed linked lists

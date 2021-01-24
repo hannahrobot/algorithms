@@ -1,147 +1,57 @@
-/**
- * @param {number[]} coins
- * @param {number} amount
- * @return {number}
- */
-var coinChange = function (coins, amount) {
-  let total = amount;
-  let least = Infinity;
-  const memo = {};
-
-  //sort coins
-  coins.sort((a, b) => a - b);
-
-  //if smallest coin is greater than amount after sorting
-  if (coins[0] > amount) {
-    return -1;
-  }
-
-  function recursive(total, count, goldCoins) {
-    //if we've hit 0, then we update our least coins required
-    if (total === 0) {
-      least = Math.min(count, least);
-      return true;
-    }
-    //if the amount isnt divisible by remaining coin
-    //or if there are no coins left and we still have money
-    if (
-      (goldCoins.length === 1 && total % goldCoins[0] !== 0) ||
-      (goldCoins.length === 0 && total > 0)
-    ) {
-      return false;
-    }
-
-    //if total is divisible by largest coin
-    if (goldCoins[goldCoins.length - 1] <= total) {
-      memo[`${total}${count}`] = recursive(
-        total - goldCoins[goldCoins.length - 1],
-        count + 1
-      );
-    }
-    //we should always check this alternate case;
-    const cutCoins = goldCoins.slice(0, goldCoins.length - 1);
-    recursive(total, count, cutCoins);
-  }
-  recursive(total, 0, coins);
-
-  return least;
-};
+//interleaving one list, iterating over it twice
+//0(n)
+//0(n)
 
 /**
- * @param {number[]} coins
- * @param {number} amount
- * @return {number}
+ * // Definition for a Node.
+ * function Node(val, next, random) {
+ *    this.val = val;
+ *    this.next = next;
+ *    this.random = random;
+ * };
  */
-var coinChange = function (coins, amount) {
-  let total = amount;
-  let least = Infinity;
-  const memo = {};
-
-  //sort coins
-  coins.sort((a, b) => a - b);
-
-  //if smallest coin is greater than amount after sorting
-  if (coins[0] > amount) {
-    return -1;
-  }
-
-  function recursive(total, count, goldCoins) {
-    //if we've hit 0, then we update our least coins required
-    if (total === 0) {
-      least = Math.min(count, least);
-      return true;
-    }
-    //if the amount isnt divisible by remaining coin
-    //or if there are no coins left and we still have money
-    if (
-      (goldCoins.length === 1 && amount % goldCoins[0] !== 0) ||
-      (goldCoins.length === 0 && total > 0)
-    ) {
-      return false;
-    }
-
-    //if total is divisible by largest coin
-    if (goldCoins[goldCoins.length - 1] <= total) {
-      memo[`${total}${count}`] = recursive(
-        total - goldCoins[goldCoins.length - 1],
-        count + 1
-      );
-    }
-    //we should always check this alternate case;
-    const cutCoins = goldCoins.slice(0, goldCoins.length - 1);
-    recursive(total, count, cutCoins);
-  }
-  recursive(total, 0, coins);
-
-  return least;
-};
 
 /**
- * @param {number[]} coins
- * @param {number} amount
- * @return {number}
+ * @param {Node} head
+ * @return {Node}
  */
-var coinChange = function (coins, amount) {
-  let total = amount;
-  let least = Infinity;
+var copyRandomList = function (head) {
+  const pointer = head;
 
-  //this case is handled in our recursion
-  // //if amount is 0 we have no options
-  // if(amount === 0) {
-  //     return 0;
-  // }
-  //sort coins
-  coins.sort((a, b) => a - b);
-
-  //if smallest coin is greater than amount after sorting
-  if (coins[0] > amount) {
-    return -1;
+  //interleave new list
+  while (head !== null) {
+    const curr = new Node(head.val, head.next, head.random);
+    const temp = head.next;
+    head.next = curr;
+    head = temp;
   }
+  //set head back to beginning
+  head = pointer;
 
-  function recursive(total, count) {
-    //if we've hit 0, then we update our least coins required
-    if (total === 0) {
-      least = Math.min(count, least);
-      return;
-    }
-    //if the amount isnt divisible by remaining coin
-    //or if there are no coins left and we still have money
-    if (
-      (coins.length === 1 && amount % coins[0] !== 0) ||
-      (coins.length === 0 && total > 0)
-    ) {
-      return;
-    }
-
-    //if total is divisible by largest coin
-    if (coins[coins.length - 1] <= total) {
-      recursive(total - coins[coins.length - 1], count + 1);
-    }
-    //we should always check this alternate case;
-    coins.pop();
-    recursive(total, count);
+  //iterate over list and change pointers for new list, get rid of old list
+  while (head.next.next !== null) {
+    temp = head.next.next;
+    head.next.next = head.next.next.next;
+    //if the random is null we dont need to go to the next node
+    head.next.random = head.next.random === null ? null : head.random.next;
+    head = temp;
   }
-  recursive(total, 0);
+  //update the random node for the last element
+  head.next.random = head.random.next;
 
-  return least;
+  return pointer.next;
 };
+
+//we have our original list
+//we have our new list
+// --get head.random
+// --if head.random === null, assign null to new list random and break
+// --count how many next you have to do to get to the random
+// --do that many next on our new list
+// --assign it
+
+//traverse the linked list and make a deep copy of the nodes
+
+//traverse our copy - fill in our deep copy nodes for randoms
+
+//you have to be aware of cycling in this problem
