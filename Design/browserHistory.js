@@ -1,3 +1,76 @@
+//doubly linked list
+//have to discard of nodes that are disconnected from forward when we visit a new url
+//time: 0(n)
+//space: 0(n)
+/**
+ * @param {string} homepage
+ */
+
+const Node = function (url, next, prev) {
+  this.url = url;
+  this.next = next;
+  this.prev = prev;
+};
+
+var BrowserHistory = function (homepage) {
+  this.head = new Node(homepage, null, null);
+  this.current = this.head;
+  this.tail = this.current;
+};
+
+/**
+ * @param {string} url
+ * @return {void}
+ */
+BrowserHistory.prototype.visit = function (url) {
+  let deletePointer = this.tail;
+
+  while (deletePointer !== this.current) {
+    const temp = deletePointer;
+    deletePointer = deletePointer.prev;
+    delete temp;
+  }
+
+  const newPage = new Node(url, null, this.current);
+  this.current.next = newPage;
+  this.current = this.current.next;
+  this.tail = this.current;
+};
+
+/**
+ * @param {number} steps
+ * @return {string}
+ */
+BrowserHistory.prototype.back = function (steps) {
+  while (steps > 0 && this.current.prev !== null) {
+    this.current = this.current.prev;
+    steps--;
+  }
+  return this.current.url;
+};
+
+/**
+ * @param {number} steps
+ * @return {string}
+ */
+BrowserHistory.prototype.forward = function (steps) {
+  while (steps > 0 && this.current.next !== null) {
+    this.current = this.current.next;
+    steps--;
+  }
+  return this.current.url;
+};
+
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * var obj = new BrowserHistory(homepage)
+ * obj.visit(url)
+ * var param_2 = obj.back(steps)
+ * var param_3 = obj.forward(steps)
+ */
+
+//------------------------------
+
 //initial solution
 //time complexity: 0(1)
 //space complexity: 0(n)
