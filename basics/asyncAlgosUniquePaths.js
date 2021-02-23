@@ -25,7 +25,7 @@ uniquePaths(3,4);    // 10
   [0, 0, 0, 0]
 ]
 
-uniquePaths(7,3);    // 24
+uniquePaths(7,3);    // 28
 
 [
   [0, 0, 1]
@@ -83,7 +83,7 @@ approaches:
 
 -------------------------------------
 
-uniquePaths(7,3);    // 24
+uniquePaths(7,3);    // 28
 top down setup view:
 [
   [0, 0, 1]
