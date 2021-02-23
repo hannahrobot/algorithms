@@ -26,3 +26,15 @@
 //topilogical sort with DFS using hashed nodes
 
 //adjacency graph
+
+//Dynamic Programming
+//  1. backtracking (if applicable)
+//  2. top down
+//  3. top down w/ memoization
+//  4. bottom up w/ tabloidization
+
+//binary tree
+//  1. recursive
+//  2. iterative stack
+//  3. iterative
+//      morris traversal
