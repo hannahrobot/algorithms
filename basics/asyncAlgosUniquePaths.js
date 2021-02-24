@@ -50,8 +50,6 @@ approaches:
   clues:
     can only go down and right
     check every possible path from each cell down and right
-    save the cell's paths to a memo/hash
-    work from last cell backwards
 
 -----------------------------------
 
@@ -65,12 +63,12 @@ approaches:
   time: 0(2^n*m)
   space: 0(m+n) worst case size of recursion callstack is m+n
 
-  **top down can be improved with a hash. if you draw out the recursion as a tree, notice that we visit many of the cells multiple times, instead of recalculating that cell's paths, lets save the number of paths from that cell to a hash table and reference it next time we land on the cell.
+  **top down can be improved with a hash. if you draw out the recursion as a tree, notice that we visit many of the cells multiple times, instead of recalculating that cell's paths each time, lets save the number of paths from that cell to a hash table and reference it next time we land on the cell.
 
 ------------------------------------
   top down w/ memoization:
     basecase: out of bounds: return 0;
-    basecase: (0,0): return 1;
+    basecase: (1,1): return 1;
 
     if(memo[m, n]){
       return memo[m,n]
@@ -143,7 +141,7 @@ function uniquePaths(m, n) {
 
 //top down w/ memoization
 function uniquePaths(m, n) {
-  const memo = [];
+  const memo = {};
 
   //we use a helper func so we can place our memo in the outer func and have global access
   function recurse(row, column) {
