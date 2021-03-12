@@ -63,7 +63,6 @@ MinHeap.prototype.heapify = function (index) {
 
   if (index !== smallest) {
     this.swap(index, smallest);
+    this.heapify(smallest);
   }
-
-  this.heapify(smallest);
 };

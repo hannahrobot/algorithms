@@ -66,36 +66,34 @@ input: 3->
 
 */
 
-// function mergeSorted(head1, head2) {
+function mergeSorted(head1, head2) {
+  if (head1 === null || head2 === null) {
+    return head1 === null ? head1 : head2;
+  }
 
-//   if(head1 === null || head2 === null) {
-//     return head1 === null? head1 : head2
-//   }
+  let p1;
+  let p2;
+  let origHead;
 
-//   let p1;
-//   let p2;
-//   let origHead;
+  p1 = head1.val <= head2.val ? head1 : head2;
+  p2 = head1.val > head2.val ? head1 : head2;
 
-//   p1 = head1.val <= head2.val ? head1 : head2
-//   p2 = head1.val > head2.val ? head1 : head2
+  origHead = p1;
 
-//   origHead = p1
+  while (p1.next !== null && p2 !== null) {
+    if (p1.next.val <= p2.val) {
+      p1 = p1.next;
+    } else {
+      let temp = p1.next;
+      p1.next = p2;
+      p2 = temp;
+    }
+  }
 
-//   while(p1.next !== null && p2 !== null){
+  p1.next = p2;
 
-//     if(p1.next.val <= p2.val) {
-//       p1 = p1.next
-//     } else {
-//       let temp = p1.next
-//       p1.next = p2
-//       p2 = temp
-//     }
-//   }
-
-//   p1.next = p2
-
-//   return origHead;
-// }
+  return origHead;
+}
 
 function mergeSorted(head1, head2) {
   // console.log('head1', head1.val)
