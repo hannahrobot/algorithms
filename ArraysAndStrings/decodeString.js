@@ -84,37 +84,32 @@ var decodeString = function (s) {
   return result;
 };
 
-//examples
-
-// '3[a]2[bc]'
-
-// '3[a2[bc[4[c]]]]'
-
-// '3[a2[cb]]'
-
-// "2[abc]3[cd]ef"
-
-// "abc3[cd]xyz"
-
-//approaches
-//stack
-
-// iterate over the sting
-
-// if i hit a closing bracket:
-//     save the index following the closing backet
-//     letter on the stack pop off
-//         keep going back
-//         the first opening bracket after iterating backover the number
-//             will signify that i can take that numner and multiply the letters by it
-//             and make that my updated string
-//     while(index >=0)
-//     keep iterating back, appending letters to the front of my string
-//     when i hit a number, multiply string by that number
-//     push the string back on the stack
-//     put the index back to after the closing bracket
-
-// else:
-// keep adding each item to the stack
-
-// return string
+//recursive
+var decodeString = function (s) {
+  let res = "";
+  let k = 1,
+    i = 0;
+  while (i < s.length) {
+    if (Number.isInteger(+s[i])) {
+      let len = 1;
+      while (Number.isInteger(+s[i + len])) len++;
+      k = parseInt(s.substr(i, len));
+      i += len;
+    } else if (s[i] === "[") {
+      let paren = 1;
+      let j = i + 1;
+      while (paren) {
+        paren += (s[j] === "[") - (s[j] === "]");
+        j++;
+      }
+      res += decodeString(s.substring(i + 1, j - 1)).repeat(k);
+      k = 1;
+      i = j;
+    } else {
+      res += s[i].repeat(k);
+      k = 1;
+      i++;
+    }
+  }
+  return res;
+};

@@ -3,58 +3,88 @@
  * @return {number}
  */
 var numDistinctIslands = function (grid) {
-  const distinctIslands = {};
-  let path = {};
-  let count = 0;
+  const distinctIslands = new Set();
 
-  const DFS = function (i, j, leftCorner) {
-    //base case
+  const DFS = function (originalPoint, currPoint) {
+    const [row, col] = currPoint;
+    const [startRow, startCol] = originalPoint;
+
+    //basecase
     if (
-      i < 0 ||
-      j < 0 ||
-      i >= grid.length ||
-      j >= grid[0].length ||
-      grid[i][j] === 0
+      row < 0 ||
+      col < 0 ||
+      row >= grid.length ||
+      col >= grid[0].length ||
+      grid[row][col] === 0
     ) {
-      return;
+      return [];
     }
 
     //mark visited
-    grid[i][j] = 0;
+    grid[row][col] = 0;
 
-    //calculate path distance from islands left corner
-    const pathNode = [i - leftCorner[0], j - leftCorner[1]];
+    //track coordinate for top left
+    const pathRow = row - startRow;
+    const pathCol = col - startCol;
+    const coordinate = `${pathRow}|${pathCol}`;
 
-    if (!path[`${pathNode[0]}${pathNode[1]}`]) {
-      path[`${pathNode[0]}${pathNode[1]}`] = true;
-    }
+    const res = [coordinate];
 
-    //recursively search each direction
-    DFS(i + 1, j, leftCorner);
-    DFS(i - 1, j, leftCorner);
-    DFS(i, j + 1, leftCorner);
-    DFS(i, j - 1, leftCorner);
+    //recurse
+    res.push(...DFS(originalPoint, [row, col + 1]));
+    res.push(...DFS(originalPoint, [row, col - 1]));
+    res.push(...DFS(originalPoint, [row + 1, col]));
+    res.push(...DFS(originalPoint, [row - 1, col]));
+
+    return res;
   };
 
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[0].length; j++) {
-      if (grid[i][j] === 1) {
-        //found the island, marked it visited
-        DFS(i, j, [i, j]);
-        //path has my island coordinates from left corner, sort them
-        const island = Object.keys(path)
-          .sort((a, b) => a - b)
-          .join("");
-        //check if this island exists
-        if (island.length && !distinctIslands[island]) {
-          //if it doesnt exist add it and count it
-          distinctIslands[island] = true;
-          count++;
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[0].length; col++) {
+      if (grid[row][col] === 1) {
+        const path = DFS([row, col], [row, col]).join("#");
+        if (!distinctIslands.hasOwnProperty(path)) {
+          distinctIslands.add(path);
         }
-        //wipe path
-        path = {};
       }
     }
   }
-  return count;
+
+  return distinctIslands.size;
 };
+
+/*
+variable
+  memo for paths that have been traversed
+  totalUniqueIslands: int
+
+iterate through grid (nested loop with rows and columns)
+  if we hit a 1, call DFS(current point, original point)
+  get coordinates returned from DFS
+  sort coordinates, join, and check if they are in memo
+  if not, add to memo and ++ total
+
+  DFS helper function(current point, original point)
+      basecase: out of bounds or val of 0 at the curr cell
+          return: ['']
+
+      mark as visited (make it 0) * do you care if i manipylate this or do you want my to create a separate visited grid
+
+      get the current cells coordinates if we subtract the original top left corner from it
+
+      add current cell coordinates to path
+
+      res = ['currentcel']
+
+      DFS:
+          res.push(...left: left coordinate, original cell, path)
+          right
+          up
+          down
+
+      return res
+
+      *if the path isnt in memo, add to total islands
+
+
+*/

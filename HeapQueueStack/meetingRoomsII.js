@@ -1,61 +1,106 @@
 //Priority queues / heap
-//Time Complexity: O(N\log N)O(NlogN)
-//Space Complexity: O(N)O(N)
+//Time Complexity: O(Nlog N) we sort our initial intervals
+//Space Complexity: O(N) heap could get as big as end times
 
-function minMeetingRooms(intervals) {
-  // Check for the base case. If there are no intervals, return 0
-  if (intervals.length === 0) {
-    return 0;
+/**
+ * @param {number[][]} intervals
+ * @return {number}
+ */
+
+//heap methods
+//swap
+//parent
+//leftChild
+//rightChild
+//insert
+//size
+//extractMin
+//peak
+//heapify
+
+const MinHeapCustom = function () {
+  this.heap = [];
+};
+
+MinHeapCustom.prototype.swap = function (index1, index2) {
+  [this.heap[index1], this.heap[index2]] = [
+    this.heap[index2],
+    this.heap[index1],
+  ];
+};
+
+MinHeapCustom.prototype.parent = function (index) {
+  return Math.floor((index - 1) / 2);
+};
+
+MinHeapCustom.prototype.leftChild = function (index) {
+  return index * 2 + 1;
+};
+
+MinHeapCustom.prototype.rightChild = function (index) {
+  return index * 2 + 2;
+};
+
+MinHeapCustom.prototype.insert = function (val) {
+  this.heap.push(val);
+  let index = this.heap.length - 1;
+
+  while (index !== 0 && this.heap[index] < this.heap[this.parent(index)]) {
+    this.swap(index, this.parent(index));
+    index = this.parent(index);
   }
+};
 
-  // Min heap
-  const allocator = [];
+MinHeapCustom.prototype.size = function () {
+  return this.heap.length;
+};
 
-  // Sort the intervals by start time
-  intervals.sort((a, b) => a[0] - b[0]);
-  console.log(intervals);
+MinHeapCustom.prototype.peak = function () {
+  return this.heap[0];
+};
 
-  // Add the first meeting
-  allocator.push(intervals[0][1]);
+MinHeapCustom.prototype.extractMin = function () {
+  const min = this.heap[0];
+  this.heap[0] = this.heap[this.heap.length - 1];
+  this.heap.pop();
+  this.heapify(0);
 
-  // Iterate over remaining intervals
-  for (let i = 1; i < intervals.length; i++) {
-    // If the room due to free up the earliest is free, assign that room to this meeting.
-    if (intervals[i][0] >= allocator[0]) {
-      allocator.shift();
-    }
+  return min;
+};
 
-    // If a new room is to be assigned, then also we add to the heap,
-    // If an old room is allocated, then also we have to add to the heap with updated end time.
-    allocator.push(intervals[i][1]);
-    allocator.sort((a, b) => a - b);
+MinHeapCustom.prototype.heapify = function (index) {
+  let left = this.leftChild(index);
+  let right = this.rightChild(index);
+  let smallest = index;
+
+  if (left < this.heap.length && this.heap[left] < this.heap[smallest]) {
+    smallest = left;
   }
+  if (right < this.heap.length && this.heap[right] < this.heap[smallest]) {
+    smallest = right;
+  }
+  if (index !== smallest) {
+    this.swap(index, smallest);
+    this.heapify(smallest);
+  }
+};
 
-  // The size of the heap tells us the minimum rooms required for all the meetings.
-  return allocator.length;
-}
-
-//alternate priority queus / heap
 var minMeetingRooms = function (intervals) {
-  if (!intervals.length) return 0;
   intervals.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+  const endTimes = new MinHeapCustom();
 
-  let minHeap = [];
-  for (let i = 0; i < intervals.length; i++) {
-    let [start, end] = intervals[i];
-    if (!minHeap.length) minHeap.push(end);
-    else {
-      let earliestAvailableTime = minHeap[0];
-      if (start < earliestAvailableTime) {
-        minHeap.push(end);
-        minHeap.sort((a, b) => (a > b ? 1 : -1));
-      } else {
-        minHeap[0] = end;
-        minHeap.sort((a, b) => (a > b ? 1 : -1));
-      }
+  endTimes.insert(intervals[0][1]);
+
+  for (let i = 1; i < intervals.length; i++) {
+    const [start, end] = intervals[i];
+    const earliestAvailableTime = endTimes.peak();
+    if (start >= earliestAvailableTime) {
+      endTimes.extractMin();
     }
+    endTimes.insert(end);
   }
-  return minHeap.length;
+
+  return endTimes.size();
 };
 
 //chronological ordering
@@ -91,3 +136,108 @@ function minMeetingRooms(intervals) {
   }
   return rooms;
 }
+
+//alt priority queue heap
+
+/**
+ * @param {number[][]} intervals
+ * @return {number}
+ */
+
+//heap methods
+//swap
+//parent
+//leftChild
+//rightChild
+//insert
+//size
+//extractMin
+//peak
+//heapify
+
+const MinHeapCustom = function () {
+  this.heap = [];
+};
+
+MinHeapCustom.prototype.swap = function (index1, index2) {
+  [this.heap[index1], this.heap[index2]] = [
+    this.heap[index2],
+    this.heap[index1],
+  ];
+};
+
+MinHeapCustom.prototype.parent = function (index) {
+  return Math.floor((index - 1) / 2);
+};
+
+MinHeapCustom.prototype.leftChild = function (index) {
+  return index * 2 + 1;
+};
+
+MinHeapCustom.prototype.rightChild = function (index) {
+  return index * 2 + 2;
+};
+
+MinHeapCustom.prototype.insert = function (val) {
+  this.heap.push(val);
+  let index = this.heap.length - 1;
+
+  while (index !== 0 && this.heap[index] < this.heap[this.parent(index)]) {
+    this.swap(index, this.parent(index));
+    index = this.parent(index);
+  }
+};
+
+MinHeapCustom.prototype.size = function () {
+  return this.heap.length;
+};
+
+MinHeapCustom.prototype.peak = function () {
+  return this.heap[0];
+};
+
+MinHeapCustom.prototype.extractMin = function () {
+  const min = this.heap[0];
+  this.heap[0] = this.heap[this.heap.length - 1];
+  this.heap.pop();
+  this.heapify(0);
+
+  return min;
+};
+
+MinHeapCustom.prototype.heapify = function (index) {
+  let left = this.leftChild(index);
+  let right = this.rightChild(index);
+  let smallest = index;
+
+  if (left < this.heap.length && this.heap[left] < this.heap[smallest]) {
+    smallest = left;
+  }
+  if (right < this.heap.length && this.heap[right] < this.heap[smallest]) {
+    smallest = right;
+  }
+  if (index !== smallest) {
+    this.swap(index, smallest);
+    this.heapify(smallest);
+  }
+};
+
+var minMeetingRooms = function (intervals) {
+  intervals.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+  const endTimes = new MinHeapCustom();
+
+  for (let i = 0; i < intervals.length; i++) {
+    const [start, end] = intervals[i];
+    if (!endTimes.size()) {
+      endTimes.insert(end);
+    } else {
+      const earliestAvailableTime = endTimes.peak();
+      if (start >= earliestAvailableTime) {
+        endTimes.extractMin();
+      }
+      endTimes.insert(end);
+    }
+  }
+
+  return endTimes.size();
+};

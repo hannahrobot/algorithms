@@ -60,3 +60,31 @@ function flatten(head) {
   pseudoHead.next.prev = null;
   return pseudoHead.next;
 }
+
+//----------------------------------
+
+var flatten = function (head) {
+  const traverseList = function (prev, node) {
+    if (node === null) {
+      return prev;
+    }
+
+    if (prev) {
+      prev.next = node;
+    }
+
+    node.prev = prev;
+
+    const tempNext = node.next;
+
+    const tail = traverseList(node, node.child);
+
+    node.child = null;
+
+    return traverseList(tail, tempNext);
+  };
+
+  traverseList(null, head);
+
+  return head;
+};

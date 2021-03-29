@@ -17,7 +17,7 @@ MaxHeap.prototype.peek = function () {
   return this.heap[0];
 };
 
-MzxHeap.prototype.insert = function (element) {
+MaxHeap.prototype.insert = function (element) {
   // push element to the end of the heap
   this.heap.push(element);
 

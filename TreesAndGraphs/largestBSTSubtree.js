@@ -10,36 +10,39 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var largestBSTSubtree = function (root, res = 0) {
-  if (isBST(root, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER)) {
-    return size(root);
-  }
-  return Math.max(largestBSTSubtree(root.left), largestBSTSubtree(root.right));
-};
+var largestBSTSubtree = function (root) {
+  const MIN = Number.MIN_SAFE_INTEGER;
+  const MAX = Number.MAX_SAFE_INTEGER;
 
-var size = function (root) {
-  if (root === null) {
-    return 0;
-  }
-  return 1 + size(root.left) + size(root.right);
-};
+  const res = findLargest(root);
 
-var isBST = function (root, min, max) {
-  if (root === null) {
-    return true;
-  }
-  if (root.val < min || root.val > max) {
-    return false;
-  } else {
-    return (
-      isBST(root.left, min, root.val - 1) &&
-      isBST(root.right, root.val - 1, max)
+  return res[1];
+
+  function findLargest(node) {
+    if (node == null) return [true, 0, MAX, MIN];
+
+    const [isBSTLeft, sizeLeft, lowerBoundLeft, upperBoundLeft] = findLargest(
+      node.left
     );
+    const [
+      isBSTRight,
+      sizeRight,
+      lowerBoundRight,
+      upperBoundRight,
+    ] = findLargest(node.right);
+
+    const lowerBoundNext = Math.min(lowerBoundLeft, node.val);
+    const upperBoundNext = Math.max(node.val, upperBoundRight);
+
+    const isBSTCurr =
+      isBSTLeft &&
+      isBSTRight &&
+      node.val > upperBoundLeft &&
+      node.val < lowerBoundRight;
+    const sizeCurr = isBSTCurr
+      ? sizeLeft + 1 + sizeRight
+      : Math.max(sizeLeft, sizeRight);
+
+    return [isBSTCurr, sizeCurr, lowerBoundNext, upperBoundNext];
   }
 };
-
-//helper function:
-//DFS
-//returns increments count
-//hits base case = node is null, returns count
-//compare counts

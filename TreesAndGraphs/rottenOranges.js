@@ -1,3 +1,12 @@
+//inplace bfs with timestamp
+
+//mark places with a timestamp as you iterate
+//if you hit another rotten orange later in the grid, move out from there with its timestamps as long as they are smaller than the curr timestamp.
+//time: 0(n^2)
+//space: 0(1)
+
+//bfs with queue
+
 /**
  * @param {number[][]} grid
  * @return {number}
