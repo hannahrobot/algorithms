@@ -123,3 +123,96 @@ const countNodes = function (root) {
 //DFS
 //increments count at each node
 //return count
+
+
+
+
+//-----------------
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+ var countNodes = function(root) {
+
+  if(!root){
+      return 0
+  }
+  if(!root.left && !root.right) {
+      return 1
+  }
+
+  let curr = root
+  let depth = 0
+
+  //find depth of all levels
+  while(curr) {
+      curr = curr.left
+      depth ++
+  }
+
+  let left = 1
+  let right = Math.pow(2, depth-1) -1
+  let pivot;
+
+  //binary search inside binary search
+  while(left <= right) {
+      pivot = left + Math.floor((right - left) / 2)
+      if(exists(pivot, depth-1, root)){
+          left = pivot + 1
+      } else {
+          right = pivot - 1
+      }
+  }
+
+  //return partial sum + left
+  return Math.pow(2, depth-1) - 1 + left
+};
+
+const exists = function(idx, depth, node){
+  let left = 0
+  let right = Math.pow(2, depth) -1
+  let pivot;
+
+  for(let i = 0; i < depth; i ++) {
+       pivot = left + Math.floor((right - left) / 2)
+       if(idx <= pivot) {
+           node = node.left
+           right = pivot
+       } else {
+           node = node.right
+           left = pivot + 1
+       }
+  }
+  return node !== null
+}
+
+
+/*BRUTE
+
+bfs or dfs, count all nodes
+
+
+OPTIMIZED
+
+find depth (left side)
+size of tree is 2 ^ depth -1
+
+binary search to find where last node ends on last level
+-start from root, go right, if it has a left go left, left left untel bottom
+  -if its the length of depth: go up and go right
+
+  num bottom nodes = last level before last level: / 2, + 1 for each traversal right
+                                                        - 1 for each traversal left
+  stop when its 1 less than the length of depth
+
+
+
+*/

@@ -26,7 +26,7 @@ MinHeap.prototype.insert = function (element) {
 
   // if the element is less than its parent:
   // swap element with its parent
-  while (index !== 0 && this.heap[index] < this.heap(parent(index))) {
+  while (index !== 0 && this.heap[index] < this.heap[parent(index)]) {
     this.swap(index, parent(index));
     index = parent(index);
   }
