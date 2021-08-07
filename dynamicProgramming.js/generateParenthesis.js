@@ -2,29 +2,30 @@
  * @param {number} n
  * @return {string[]}
  */
-const generateParenthesis = function (n) {
-  if (n === 0) {
-    return [""];
-  }
+var generateParenthesis = function (n) {
+  const res = [];
 
-  const ans = [];
-
-  const backtrack = function (cur, open, close) {
-    if (cur.length === n * 2) {
-      ans.push(cur);
+  const backtrack = function (arr, open, close) {
+    //basecase
+    if (arr.length === n * 2) {
+      res.push(arr.join(""));
       return;
     }
+
     if (open < n) {
-      backtrack(cur + "(", open + 1, close);
+      arr.push("(");
+      backtrack(arr, open + 1, close);
+      arr.pop();
     }
+
     if (close < open) {
-      backtrack(cur + ")", open, close + 1);
+      arr.push(")");
+      backtrack(arr, open, close + 1);
+      arr.pop();
     }
   };
 
-  backtrack("", 0, 0);
-  return ans;
-};
+  backtrack([], 0, 0);
 
-//time:
-//space:
+  return res;
+};
